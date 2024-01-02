@@ -1,0 +1,10 @@
+# Plex Info
+baseurl: 'http://75.100.12.54:32400'
+token: 'fVA3mbEYCznAAiiAd3tv'
+
+# Listenbrainz Info
+user_token: '39256d2c-f8a3-43bc-909d-61e276606f54' # Replace 'YOUR_USER_TOKEN' with your actual ListenBrainz user token
+playlist_username: 'Mjsciarabba' # Replace 'YOUR_USERNAME' with the username of the user whose playlists you want to sync
+
+section: 'Music'
+poster_file_path: 'C:\Users\matth\Downloads\Playlist Cover.jpg'
