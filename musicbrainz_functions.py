@@ -12,7 +12,7 @@ mbids = []
 
 
 # Function to get specific recording MBID for a general recording MBID
-def get_specific_recording_mbids(recording_mbid):
+def get_track_mbids(recording_mbid):
     """
     Searches and returns all track IDs for a recording
     :param recording_mbid: The recording ID from Musicbrainz

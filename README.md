@@ -14,7 +14,35 @@ Get the latest version using your favorite git client or by downloading the late
 https://github.com/Mjsciarabba/Listenbrainz-Playlist-Sync/releases
 
 ### Step 3 - Configuration
-From the project directory rename `config.yml.example` to `config.yml`, open `config.yml` with your favorite text editor and edit where needed.
+From the project directory rename `config.yml.example` to `config.yml`, open `config.yml` with your text editor and edit where needed.
+
+#### Plex
+The method for obtaining a Plex token is described here: https://support.plex.tv/articles/204059436-finding-an-authentication-token-x-plex-token/
+
+In the config file enter your Plex library / section name containing your Music, like so:
+`music_section: 'Music'` 
+
+A completed Plex section looks like this:
+
+```
+# Plex Info
+baseurl: '192.168.1.70:32400' 
+token: 'abcdef123456789' 
+music_section: 'Music' 
+poster_file_path: 'path\to\poster.png'
+```
+
+#### Listenbrainz
+Information on how to obtain the Listenbrainz token for your user can be found here: https://listenbrainz.readthedocs.io/en/latest/users/api/index.html#get-the-user-token
+
+The `playlist_username` should be your Listenbrainz username
+
+A completed Listenbrainz section looks like this:
+```
+# Listenbrainz Info
+user_token: 'abcdef123456789' 
+playlist_username: 'listenbrainz'
+```
 
 ### Step 4 - Install Requirements
 

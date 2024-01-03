@@ -1,31 +1,19 @@
 import re
 import requests
-from datetime import datetime, timedelta
 
 
 from plex_functions import *
 import global_variables as g
 from musicbrainz_functions import *
 from logger_utils import logger, get_tqdm_bar
+from misc_utils import *
 
 with open("config.yml", 'r') as ymlfile:
     cfg = yaml.safe_load(ymlfile)
 
 track_list = []
 
-# Get the current date
-current_date = datetime.now()
-
-# Calculate the difference in days between the current day and Monday (weekday 0)
-days_to_monday = (current_date.weekday() - 0) % 7
-
-# Subtract the difference to get the date of the most recent Monday
-most_recent_monday = current_date - timedelta(days=days_to_monday)
-
-# Format the date as 'YYYY-MM-DD'
-formatted_date = most_recent_monday.strftime('%Y-%m-%d')
-
-search_title = f"Weekly Jams for {cfg['playlist_username']}, week of {formatted_date} Mon"
+search_title = get_playlist_title(cfg['playlist_username'])
 
 
 def get_weeklyjams_playlist(user_token):
@@ -122,7 +110,7 @@ def get_tracks_from_playlist(user_token, playlist_mbid):
                 track_title = track_data['title']
                 track_artist = track_data['creator']
                 album_artist = track_data['extension']['https://musicbrainz.org/doc/jspf#track']['additional_metadata']['artists'][0]['artist_credit_name']
-                mbids = get_specific_recording_mbids(track_data['identifier'].split('/')[-1])
+                mbids = get_track_mbids(track_data['identifier'].split('/')[-1])
 
                 track_info = {
                     'title': track_title,

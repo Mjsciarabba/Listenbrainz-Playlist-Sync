@@ -5,6 +5,7 @@ from plexapi.server import PlexServer
 
 import global_variables as g
 from logger_utils import logger
+from misc_utils import *
 
 with open("config.yml", 'r') as ymlfile:
     cfg = yaml.safe_load(ymlfile)
@@ -17,38 +18,18 @@ plex_tracks = []
 missing_tracks = []
 
 
-def normalize_characters(title: str):
-    """
-    Swaps certain mapped characters in a title in order to get a better match
-    :param title: The original track title
-    :return: The normalized title
-    """
-    char_mapping = {
-        '...': chr(8230),
-        '“': '"',
-        '”': '"',
-        '’': "'"
-        # Add more mappings as needed
-    }
-
-    for key, value in char_mapping.items():
-        title = title.replace(key, value)
-
-    return title
-
-
 def set_section():
     """
     Sets the Plex library section to search in
     """
     # Handle if the section name passed in is blank
-    if cfg['section'] == "":
+    if cfg['music_section'] == "":
         # Throw an error
         raise ValueError("Section name cannot be blank.")
 
     # Set the section
     try:
-        g.section = plex.library.section(cfg['section'])
+        g.section = plex.library.section(cfg['music_section'])
     except plexapi.exceptions.NotFound:
         raise ValueError("Section not found.")
 
