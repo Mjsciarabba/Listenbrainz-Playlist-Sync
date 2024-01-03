@@ -1,0 +1,10 @@
+# Plex Info
+baseurl: 'YOUR_PLEX_URL' # Replace 'YOUR_PLEX_URL' with the URL for your server
+token: 'YOUR_TOKEN' # Replace 'YOUR_USER_TOKEN' with your Plex token
+section: 'YOUR_SECTION_NAME' # Replace 'YOUR_SECTION_NAME' with the name of your music section
+poster_file_path: 'YOUR_FILE_PATH' # OPTIONAL, replace 'YOUR_FILE_PATH' with the filepath to a poster for the playlist
+
+# Listenbrainz Info
+user_token: 'YOUR_USER_TOKEN' # Replace 'YOUR_USER_TOKEN' with your actual ListenBrainz user token
+playlist_username: 'YOUR_USERNAME' # Replace 'YOUR_USERNAME' with the username of the user whose playlists you want to sync
+

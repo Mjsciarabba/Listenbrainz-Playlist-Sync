@@ -29,7 +29,7 @@ Now that configuration is finished and requirements have been installed we can f
 
 ## Requirements
 
-[Python 3.7 or higher](https://www.python.org/)
+[Python 3.11 or higher](https://www.python.org/)
 
 ## Credits
 

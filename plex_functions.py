@@ -11,6 +11,8 @@ with open("config.yml", 'r') as ymlfile:
 
 plex = PlexServer(cfg['baseurl'], cfg['token'])
 
+poster_path = cfg['poster_file_path']
+
 plex_tracks = []
 missing_tracks = []
 
@@ -156,7 +158,8 @@ def create_playlist():
         try:
             logger.info("Playlist not found, creating...")
             playlist = g.section.createPlaylist(title=g.playlist_name, items=plex_tracks)
-            playlist.uploadPoster(filepath=cfg['poster_file_path'])
+            if poster_path:
+                playlist.uploadPoster(filepath=poster_path)
             playlist.edit(summary=g.playlist_summary)
             logger.info("Playlist created")
         except Exception as e:
