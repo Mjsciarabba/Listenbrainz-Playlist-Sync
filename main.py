@@ -1,4 +1,6 @@
-from listenbrainz_functions import *
+import yaml
+from modules.listenbrainz_functions import get_weeklyjams_playlist
+from modules.plex_functions import set_section
 
 with open("config.yml", 'r') as ymlfile:
     cfg = yaml.safe_load(ymlfile)
