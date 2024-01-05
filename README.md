@@ -73,4 +73,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Credits
 
 [Python-PlexAPI](https://github.com/pkkid/python-plexapi)
+
 [ListenBrainz API](https://listenbrainz.readthedocs.io/en/latest/users/api/index.html)
