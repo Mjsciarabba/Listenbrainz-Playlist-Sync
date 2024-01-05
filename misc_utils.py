@@ -34,8 +34,7 @@ def normalize_characters(title: str):
         '...': chr(8230),
         '“': '"',
         '”': '"',
-        '’': "'"
-        # Add more mappings as needed
+        '’': "'",
     }
 
     for key, value in char_mapping.items():

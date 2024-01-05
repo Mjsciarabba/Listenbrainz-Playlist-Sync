@@ -1,10 +1,16 @@
 import musicbrainzngs
 import logging
+import yaml
 
 from logger_utils import logger
 
+with open("config.yml", 'r') as ymlfile:
+    cfg = yaml.safe_load(ymlfile)
+
+email = cfg['api_email']
+
 # Set your MusicBrainz API key
-musicbrainzngs.set_useragent("ListenbrainzToPlex", "1.0", "mjsciarabba72@gmail.com")
+musicbrainzngs.set_useragent(app='ListenBrainzToPlex', version='1.0', contact=email)
 
 logging.getLogger("musicbrainzngs").setLevel(logging.WARNING)
 

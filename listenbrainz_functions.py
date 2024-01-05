@@ -19,7 +19,7 @@ search_title = get_playlist_title(cfg['playlist_username'])
 def get_weeklyjams_playlist(user_token):
     """
     Goes through all the 'Created For' playlists and returns the 'Weekly Jams' playlist for the current week
-    :param user_token: The Listenbrainz token for the user
+    :param user_token: The ListenBrainz token for the user
     :return: The 'Weekly Jams' playlist info
     """
     username = cfg['playlist_username']
@@ -80,7 +80,7 @@ def get_tracks_from_playlist(user_token, playlist_mbid):
     """
     Retrieves all tracks and their related info for a specific playlist
     :param playlist_mbid: The Musicbrainz ID for the playlist to pull tracks from
-    :param user_token: The Listenbrainz token for the user
+    :param user_token: The ListenBrainz token for the user
     :return: A list of tracks from the searched playlist
     """
     try:
@@ -110,19 +110,20 @@ def get_tracks_from_playlist(user_token, playlist_mbid):
                 track_title = track_data['title']
                 track_artist = track_data['creator']
                 album_artist = track_data['extension']['https://musicbrainz.org/doc/jspf#track']['additional_metadata']['artists'][0]['artist_credit_name']
-                mbids = get_track_mbids(track_data['identifier'].split('/')[-1])
+                track_mbids = get_track_mbids(track_data['identifier'].split('/')[-1])
 
                 track_info = {
                     'title': track_title,
                     'artist': track_artist,
                     'album_artist': album_artist,
-                    'mbids': mbids
+                    'mbids': track_mbids
                 }
                 # logger.info("Found info for track: " + track_title)
                 track_list.append(track_info)
 
         else:
-            print(f"Error getting tracks: {response.status_code} - {response.text}")
+            logger.error(f"Error getting tracks: {response.status_code} - {response.text}")
+            exit()
 
     except Exception as e:
         logger.error(f"An error occurred: {e}")
