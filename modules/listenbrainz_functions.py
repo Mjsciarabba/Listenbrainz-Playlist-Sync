@@ -2,11 +2,11 @@ import re
 import requests
 
 
-from plex_functions import *
-import global_variables as g
-from musicbrainz_functions import *
-from logger_utils import logger, get_tqdm_bar
-from misc_utils import *
+from modules.plex_functions import *
+import modules.global_variables as g
+from modules.musicbrainz_functions import *
+from modules.logger_utils import logger, get_tqdm_bar
+from modules.misc_utils import *
 
 with open("config.yml", 'r') as ymlfile:
     cfg = yaml.safe_load(ymlfile)

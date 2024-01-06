@@ -2,7 +2,7 @@ import musicbrainzngs
 import logging
 import yaml
 
-from logger_utils import logger
+from modules.logger_utils import logger
 
 with open("config.yml", 'r') as ymlfile:
     cfg = yaml.safe_load(ymlfile)

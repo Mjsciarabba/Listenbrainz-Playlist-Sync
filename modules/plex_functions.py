@@ -3,9 +3,11 @@ import plexapi.exceptions
 
 from plexapi.server import PlexServer
 
-import global_variables as g
-from logger_utils import logger
-from misc_utils import *
+import modules.global_variables as g
+from modules.logger_utils import logger
+from modules.misc_utils import *
+
+
 with open("config.yml", 'r') as ymlfile:
     cfg = yaml.safe_load(ymlfile)
 
