@@ -62,6 +62,26 @@ Now that configuration is finished and requirements have been installed we can f
 
 `python main.py`
 
+### Optional - Schedule Task
+Using the Windows Task Scheduler, you can have this script run on a weekly basis automatically. Here's how to set it up:
+
+1. Create a `Runner.cmd` file by opening the text editor (i.e. Notepad, TextEdit) and pasting the following code:
+```
+cd C:\Users\USERNAMEHERE\Listenbrainz Playlist Sync
+python main.py
+```
+2. Open Task Scheduler by searching for it in the Start Menu or by opening the Run window (Windows + R) and typing taskschd.msc before hitting OK.
+** Ensure that Task Scheduler is opened and not Task Manager **
+3. Select "Create a basic task" on the right-hand column
+4. Give the task a name, such as `Listenbrainz Sync` and then select "Next"
+5. Choose the frequency that this should run, `Weekly` is suggested.
+6. Choose the action "Start a program" and select "Next".
+7. Click "Browse", Navigate to the directory and choose `Runner.cmd`, which was created in Step 1, then select "Open".
+8. Copy the directory everything up to but not including `Runner.cmd` from the "Program/Script" field, and paste it into the "Start in" field.
+9. Click "Finish".
+10. Click "Task Schedule Library" on the left. The "Listenbrainz Sync" task should be visible.
+
+
 ## Requirements
 
 [Python 3.11 or higher](https://www.python.org/)
