@@ -4,7 +4,7 @@ This is a Python project made to import the 'Weekly Jams' playlist from ListenBr
 
 ## Setup
 ### Step 1 - Python
-Make sure you have Python `3.11` or higher installed:
+Make sure you have Python `3.11` installed:
 
 [Python homepage](https://www.python.org/)
 
@@ -14,12 +14,12 @@ Get the latest version using your favorite git client or by downloading the late
 https://github.com/Mjsciarabba/Listenbrainz-Playlist-Sync/releases
 
 ### Step 3 - Configuration
-From the project directory rename `config.yml.example` to `config.yml`, open `config.yml` with your text editor and edit where needed.
+In the project directory rename `config.yml.example` to `config.yml`, open `config.yml` with your text editor and edit where needed.
 
 #### Plex
 The method for obtaining a Plex token is described here: https://support.plex.tv/articles/204059436-finding-an-authentication-token-x-plex-token/
 
-In the config file enter your Plex library / section name containing your music, like so:
+In the config file, enter your Plex library/section name containing your music, like so:
 `music_section: 'Music'` 
 
 The `poster_file_path` field is optional. This is for if you want to upload a custom playlist cover instead of using the 
@@ -58,7 +58,7 @@ Install the additional requirements using the Python package installer (pip) fro
 `pip install -r requirements.txt`
 
 ### Step 5 - Run the Program
-Now that configuration is finished and requirements have been installed we can finally start the script:
+Now that configuration is finished and requirements have been installed, we can finally start the script:
 
 `python main.py`
 
@@ -84,7 +84,7 @@ python main.py
 
 ## Requirements
 
-[Python 3.11 or higher](https://www.python.org/)
+[Python 3.11](https://www.python.org/)
 
 ## License
 
