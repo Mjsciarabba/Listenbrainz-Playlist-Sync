@@ -117,6 +117,9 @@ def create_playlist():
     Creates a playlist in Plex. Will check if a playlist with the same name exists, and if it does it will
     replace/add tracks as needed
     """
+
+    filter_tracks()
+
     logger.info("Checking playlist status...")
     try:
         # Check if the playlist already exists
@@ -141,7 +144,7 @@ def create_playlist():
         try:
             logger.info("Playlist not found, creating...")
             playlist = g.section.createPlaylist(title=g.playlist_name, items=plex_tracks)
-            if poster_path:
+            if poster_path != 'YOUR_FILE_PATH':
                 playlist.uploadPoster(filepath=poster_path)
             playlist.edit(summary=g.playlist_summary)
             logger.info("Playlist created")
@@ -152,3 +155,22 @@ def create_playlist():
     except Exception as e:
         # Handle other specific exceptions if needed
         logger.error(f"An unexpected error occurred: {e}")
+
+
+def filter_tracks():
+    """
+    Filters out tracks by genre before creating/modifying the playlist.
+    :return:
+    """
+    filter_genre = cfg['filter_genre']
+    if filter_genre != 'YOUR_GENRE':
+        for item in plex_tracks:
+            track_album = item.album()
+            genres = track_album.genres
+            for album_genre in genres:
+                if album_genre.tag == filter_genre:
+                    logger.info(f'Track "{item.title}" removed due to genre filter.')
+                    plex_tracks.remove(item)
+                    continue
+
+

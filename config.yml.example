@@ -3,6 +3,7 @@ baseurl: 'YOUR_PLEX_URL' # Replace 'YOUR_PLEX_URL' with the URL for your server
 token: 'YOUR_TOKEN' # Replace 'YOUR_USER_TOKEN' with your Plex token
 music_section: 'YOUR_SECTION_NAME' # Replace 'YOUR_SECTION_NAME' with the name of your music section
 poster_file_path: 'YOUR_FILE_PATH' # OPTIONAL, replace 'YOUR_FILE_PATH' with the filepath to a poster for the playlist
+filter_genre: 'YOUR_GENRE' # OPTIONAL, replace 'YOUR_GENRE' with the genre you want to filter by (case-sensitive, one only).
 
 # ListenBrainz Info
 user_token: 'YOUR_USER_TOKEN' # Replace 'YOUR_USER_TOKEN' with your actual ListenBrainz user token

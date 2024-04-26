@@ -8,4 +8,3 @@ with open("config.yml", 'r') as ymlfile:
 if __name__ == "__main__":
     set_section()
     get_weeklyjams_playlist(cfg['user_token'])
-

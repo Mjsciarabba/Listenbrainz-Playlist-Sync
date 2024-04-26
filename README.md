@@ -25,6 +25,8 @@ In the config file, enter your Plex library/section name containing your music, 
 The `poster_file_path` field is optional. This is for if you want to upload a custom playlist cover instead of using the 
 auto-generated one from Plex. This upload only happens during initial creation of the playlist
 
+`filter_genre` is also optional. This field is used to filter out unwanted tracks by genre. A use case could be removing pesky Christmas songs infiltrating your playlist in the off-season.
+
 A completed Plex section looks like this:
 
 ```
@@ -33,6 +35,7 @@ baseurl: '192.168.1.70:32400'
 token: 'abcdef123456789' 
 music_section: 'Music' 
 poster_file_path: 'path\to\poster.png'
+filter_genre: 'Christmas'
 ```
 
 #### ListenBrainz
