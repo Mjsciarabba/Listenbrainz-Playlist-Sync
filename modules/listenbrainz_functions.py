@@ -110,8 +110,8 @@ def get_tracks_from_playlist(user_token, playlist_mbid):
                 track_title = track_data['title']
                 track_artist = track_data['creator']
                 album_artist = track_data['extension']['https://musicbrainz.org/doc/jspf#track']['additional_metadata']['artists'][0]['artist_credit_name']
-                track_mbids = get_track_mbids(track_data['identifier'].split('/')[-1])
-
+                identifier = str(track_data['identifier'][0])
+                track_mbids = get_track_mbids(identifier.split('/')[-1])
                 track_info = {
                     'title': track_title,
                     'artist': track_artist,
