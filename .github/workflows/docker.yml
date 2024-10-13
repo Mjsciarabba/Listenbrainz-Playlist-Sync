@@ -8,6 +8,8 @@ on:
     branches: [ main ]
     tags:
       - 'v*'
+  pull_request:
+    branches: [ main ]
   workflow_dispatch: 
 
 env:
