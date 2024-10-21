@@ -13,9 +13,6 @@ with open("config.yml", 'r') as ymlfile:
 
 track_list = []
 
-search_title = get_playlist_title(cfg['playlist_username'])
-
-
 def get_weeklyjams_playlist(user_token):
     """
     Goes through all the 'Created For' playlists and returns the 'Weekly Jams' playlist for the current week
@@ -24,6 +21,39 @@ def get_weeklyjams_playlist(user_token):
     """
     username = cfg['playlist_username']
 
+    search_title = get_playlist_title(username)
+
+    try:
+        get_playlist(username,user_token,search_title)
+    except Exception as e:
+        logger.error(f"Unable to create Weekly Exploration playlist")
+
+
+def get_weeklyexploration_playlist(user_token):
+    """
+    Goes through all the 'Created For' playlists and returns the 'Weekly Exploration' playlist for the current week
+    :param user_token: The ListenBrainz token for the user
+    :return: The 'Weekly Exploration' playlist info
+    """
+    username = cfg['playlist_username']
+
+    search_title = get_playlist_exploration_title(username)
+
+    try:
+        get_playlist(username,user_token,search_title)
+    except Exception as e:
+        logger.error(f"Unable to create Weekly Exploration playlist")
+
+
+
+def get_playlist(username, user_token, search_title):
+    """
+    Goes through all the 'Created For' playlists and returns the 'Weekly Exploration' playlist for the current week
+    :param username: The ListenBrainz username for the user
+    :param user_token: The ListenBrainz token for the user
+    :param search_title: Search string for the playlist title
+    :return: The 'Weekly Exploration' playlist info
+    """
     try:
         logger.info("Getting playlists...")
 
@@ -49,7 +79,7 @@ def get_weeklyjams_playlist(user_token):
 
             # Find the playlist that is titled search_title
             for playlist in playlists:
-                if playlist['playlist']['title'] == search_title:
+                if search_title in playlist['playlist']['title']:
                     playlist_mbid = playlist['playlist']['identifier'].split('/')[-1]
 
                     # Get the name of the second playlist
@@ -74,7 +104,6 @@ def get_weeklyjams_playlist(user_token):
     except Exception as e:
         logger.error(f"An error occurred: {e}")
         exit()
-
 
 def get_tracks_from_playlist(user_token, playlist_mbid):
     """
