@@ -13,14 +13,15 @@ with open("config.yml", 'r') as ymlfile:
 
 track_list = []
 
-search_title = get_playlist_title(cfg['playlist_username'])
+# search_title = get_weekly_playlist_title(cfg['playlist_username'])
+search_title = get_daily_playlist_title(cfg['playlist_username'])
 
 
-def get_weeklyjams_playlist(user_token):
+def get_playlists(user_token):
     """
-    Goes through all the 'Created For' playlists and returns the 'Weekly Jams' playlist for the current week
+    Goes through all the 'Created For' playlists and returns the designated playlist for the current week
     :param user_token: The ListenBrainz token for the user
-    :return: The 'Weekly Jams' playlist info
+    :return: The specified playlist's info
     """
     username = cfg['playlist_username']
 

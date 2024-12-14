@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 
 
-def get_playlist_title(username: str):
+def get_weekly_playlist_title(username: str):
     """
     Gets the date of the most recent Monday and formats it for the title to search for
     :param username: The username for the playlist
@@ -20,6 +20,26 @@ def get_playlist_title(username: str):
     formatted_date = most_recent_monday.strftime('%Y-%m-%d')
 
     title = f"Weekly Jams for {username}, week of {formatted_date} Mon"
+
+    return title
+
+
+def get_daily_playlist_title(username: str):
+    """
+    Gets the date of the most recent Monday and formats it for the title to search for
+    :param username: The username for the playlist
+    :return: The formatted title to search for
+    """
+    # Get the current date
+    current_date = datetime.now()
+
+    # Get the abbreviated weekday name
+    day_abbreviation = current_date.strftime("%a")
+
+    # Format the date as 'YYYY-MM-DD'
+    formatted_date = current_date.strftime('%Y-%m-%d')
+
+    title = f"Daily Jams for {username}, {formatted_date} {day_abbreviation}"
 
     return title
 
