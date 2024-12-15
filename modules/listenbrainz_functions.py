@@ -13,9 +13,7 @@ with open("config.yml", 'r') as ymlfile:
 
 track_list = []
 
-# search_title = get_weekly_playlist_title(cfg['playlist_username'])
-search_title = get_daily_playlist_title(cfg['playlist_username'])
-
+patch = cfg['playlist_patch']
 
 def get_playlists(user_token):
     """
@@ -50,7 +48,7 @@ def get_playlists(user_token):
 
             # Find the playlist that is titled search_title
             for playlist in playlists:
-                if playlist['playlist']['title'] == search_title:
+                if playlist['playlist']['extension']['https://musicbrainz.org/doc/jspf#playlist']['additional_metadata']['algorithm_metadata']['source_patch'] == patch:
                     playlist_mbid = playlist['playlist']['identifier'].split('/')[-1]
 
                     # Get the name of the second playlist
@@ -67,7 +65,7 @@ def get_playlists(user_token):
                     get_tracks_from_playlist(user_token, playlist_mbid)
                     break
             else:
-                raise ValueError(f'No playlist found with title "{search_title}"')
+                raise ValueError(f'No playlist found with patch "{patch}"')
 
         else:
             raise ValueError(f"Error getting playlists: {response.status_code} - {response.text}")
