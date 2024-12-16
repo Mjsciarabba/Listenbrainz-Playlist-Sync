@@ -9,5 +9,6 @@ filter_genre: 'YOUR_GENRE' # OPTIONAL, replace 'YOUR_GENRE' with the genre you w
 user_token: 'YOUR_USER_TOKEN' # Replace 'YOUR_USER_TOKEN' with your actual ListenBrainz user token
 playlist_username: 'YOUR_USERNAME' # Replace 'YOUR_USERNAME' with the username of the user whose playlists you want to sync
 api_email: 'YOUR_EMAIL' # Replace with the email you want to use for the Musicbrainz API
-playlist_patch: 'weekly-jams' # Replace with any of the following: daily-jams, weekly-jams
+create_daily: True # Set to true if you want this ListenBrainz playlist to be synced
+create_weekly: True # Set to true if you want this ListenBrainz playlist to be synced
 
