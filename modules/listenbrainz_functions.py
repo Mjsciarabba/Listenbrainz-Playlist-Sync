@@ -86,10 +86,8 @@ def get_playlists(user_token):
         logger.error(f"An error occurred: {e}")
         exit()
 
-    # for mbid in first_matches:
-    #     get_tracks_from_playlist(user_token, mbid)
-
-    get_tracks_from_playlist(user_token, 'c866fcc3-7dfc-41c1-a5cc-a2b75c447e31')
+    for mbid in first_matches:
+        get_tracks_from_playlist(user_token, mbid)
 
 
 def get_tracks_from_playlist(user_token, playlist_mbid):
