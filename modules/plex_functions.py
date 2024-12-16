@@ -45,6 +45,7 @@ def search_for_track(track_list: list[dict]):
 
     count = 0
     guid_match: bool = False
+    plex_tracks.clear()
 
     for track in track_list:
         title = track['title']
@@ -60,6 +61,7 @@ def search_for_track(track_list: list[dict]):
                 # Attempt Normalizing title and search again
                 logger.warning("No match on first pass, attempting to normalize title...")
                 normalized_title = normalize_characters(title)
+                print(normalized_title)
                 search_result = g.section.searchTracks(title=normalized_title)
                 if not search_result:
                     logger.error(f"No match found for {title} after normalize, skipping...")
