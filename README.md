@@ -46,12 +46,16 @@ The `playlist_username` should be your ListenBrainz username
 `api_email` is needed for the Musicbrainz API to make queries. You do not need to have a Musicbrainz account, and you 
 can use any email address
 
+`create_daily` and `create_weekly` allow you to set whether that playlist type will sync from ListenBrainz. By default, only `create_weekly` is set to `True`
+
 A completed ListenBrainz section looks like this:
 ```
 # ListenBrainz Info
 user_token: 'abcdef123456789' 
 playlist_username: 'listenbrainz'
 api_email: 'mail@example.com'
+create_daily: False
+create_weekly: True
 ```
 
 ### Step 4 - Install Requirements
