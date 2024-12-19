@@ -6,11 +6,11 @@ from modules.plex_functions import *
 import modules.global_variables as g
 from modules.musicbrainz_functions import *
 from modules.logger_utils import logger, get_tqdm_bar
-from modules.misc_utils import *
 
 with open("config.yml", 'r') as ymlfile:
     cfg = yaml.safe_load(ymlfile)
 
+# List to store the tracks found from playlist search
 track_list = []
 
 daily_bool = cfg['create_daily']
@@ -28,8 +28,10 @@ patch_set = set(patch_list)
 # Convert patch_list to a normalized set for consistency
 normalized_patch_set = {patch.strip().lower() for patch in patch_list}
 
-# Dictionary to store the first match for each patch
+# List to store the first match for each patch
 first_matches = []
+# Set to store matched patches
+matched_patches = set()
 
 def get_playlists(user_token):
     """
@@ -71,9 +73,12 @@ def get_playlists(user_token):
                 normalized_source_patch = source_patch.strip().lower()
 
                 # Check if the source_patch is in the normalized set
-                if normalized_source_patch in normalized_patch_set and normalized_source_patch not in first_matches:
+                if normalized_source_patch in normalized_patch_set and normalized_source_patch not in first_matches and normalized_source_patch not in matched_patches:
                     playlist_mbid = playlist['playlist']['identifier'].split('/')[-1]
                     first_matches.append(playlist_mbid)
+
+                    # Mark this patch as matched
+                    matched_patches.add(normalized_source_patch)
 
                 # Stop early if all patches have matches
                 if len(first_matches) == len(normalized_patch_set):
@@ -87,6 +92,7 @@ def get_playlists(user_token):
         exit()
 
     for mbid in first_matches:
+        track_list.clear()
         get_tracks_from_playlist(user_token, mbid)
 
 
