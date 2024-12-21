@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+import re
 
 
 def get_weekly_playlist_title(username: str):
@@ -62,3 +63,16 @@ def normalize_characters(title: str):
         title = title.replace(key, value)
 
     return title
+
+
+# Define a function to check if a string contains Japanese characters
+def contains_japanese(text):
+    # Unicode ranges for Japanese characters
+    # Hiragana: \u3040-\u309F
+    # Katakana: \u30A0-\u30FF
+    # Kanji: \u4E00-\u9FFF
+    # Full-width Katakana: \uFF66-\uFF9D
+    japanese_pattern = re.compile(r'[\u3040-\u30FF\u4E00-\u9FFF\uFF66-\uFF9D]')
+
+    # Search the pattern in the text
+    return bool(japanese_pattern.search(text))
