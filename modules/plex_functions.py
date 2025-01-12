@@ -104,6 +104,7 @@ def search_with_fallbacks(title, pseudo_titles):
     if pseudo_titles:
         logger.warning(f"No match after normalization, attempting pseudo-titles...")
         for pseudo_title in pseudo_titles:
+            print(pseudo_title)
             search_result = g.section.searchTracks(title=pseudo_title)
             if search_result:
                 return search_result
@@ -122,6 +123,7 @@ def match_track(search_result, mbids, album_artist):
             logger.info(f"Match found via GUID: {result.title} - {result.artist().title}")
             return result
 
+    logger.warning(f"No GUID match found, attempting to match with artist name...")
     for result in search_result:
         if result.artist().title == album_artist:
             logger.info(f"Match found via artist name: {result.title} - {result.artist().title}")

@@ -156,7 +156,7 @@ def get_tracks_from_playlist(user_token, playlist_mbid):
 
                     # Process the identifier
                     mbid = identifier.split('/')[-1]
-                    track_mbids, pseudo_titles = get_track_mbids(mbid)
+                    track_mbids, pseudo_titles = get_track_mbids(mbid, track_title)
 
                     track_info = {
                         'title': track_title,
