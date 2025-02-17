@@ -19,6 +19,7 @@ poster_path = cfg['poster_file_path']
 plex_tracks = []  # Found tracks to be added to Plex
 missing_tracks = []  # Any tracks that aren't found in Plex
 
+playlist_prefix = cfg['playlist_prefix']
 
 def set_section():
     """
@@ -142,7 +143,7 @@ def create_playlist():
     logger.info("Checking playlist status...")
     try:
         # Check if the playlist already exists
-        playlist = g.section.playlist(g.playlist_name)
+        playlist = g.section.playlist(playlist_prefix+g.playlist_name)
         logger.warning("Playlist already exists, checking for new tracks...")
 
         if playlist.items() == plex_tracks:
@@ -162,7 +163,7 @@ def create_playlist():
     except plexapi.exceptions.NotFound:
         try:
             logger.info("Playlist not found, creating...")
-            playlist = g.section.createPlaylist(title=g.playlist_name, items=plex_tracks)
+            playlist = g.section.createPlaylist(title=playlist_prefix+g.playlist_name, items=plex_tracks)
             if poster_path != 'YOUR_FILE_PATH':
                 playlist.uploadPoster(filepath=poster_path)
             playlist.edit(summary=g.playlist_summary)
