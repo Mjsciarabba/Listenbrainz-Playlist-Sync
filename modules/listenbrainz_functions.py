@@ -23,6 +23,7 @@ def get_dailyjams_playlist(user_token):
 
     search_title = get_playlist_daily_title(username)
     logger.info(search_title)
+    logger.info("---------------------------"+search_title)
 
     try:
         get_playlist(username,user_token,search_title)
@@ -39,6 +40,7 @@ def get_weeklyjams_playlist(user_token):
 
     search_title = get_playlist_title(username)
     logger.info(search_title)
+    logger.info("---------------------------"+search_title)
 
     try:
         get_playlist(username,user_token,search_title)
@@ -55,6 +57,7 @@ def get_weeklyexploration_playlist(user_token):
     username = cfg['playlist_username']
 
     search_title = get_playlist_exploration_title(username)
+    logger.info(search_title)
     logger.info("---------------------------"+search_title)
 
     try:
