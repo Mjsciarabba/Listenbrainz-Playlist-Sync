@@ -21,6 +21,7 @@ missing_tracks = []  # Any tracks that aren't found in Plex
 
 playlist_prefix = cfg['playlist_prefix']
 
+
 def set_section():
     """
     Sets the Plex library section to search in
@@ -37,100 +38,81 @@ def set_section():
         raise ValueError("Section not found.")
 
 
+# Search through the Plex library for the track matching the name
 def search_for_track(track_list: list[dict]):
     """
     Search through the Plex library for the track matching the names in the track_list
     :param track_list: List of tracks to search for
     """
+
     count = 0
-    plex_tracks.clear()
-    missing_tracks.clear()
+    guid_match: bool = False
 
     for track in track_list:
         title = track['title']
         artist = track['artist']
         album_artist = track['album_artist']
         mbids = track['mbids']
-        pseudo_titles = track['pseudo_titles']
 
         try:
-            logger.debug(f"Searching for {title}...")
-            search_result = search_with_fallbacks(title, pseudo_titles)
-
+            logger.info(f"Searching for {title}...")
+            guid_match = False
+            search_result = g.section.searchTracks(title=title)
             if not search_result:
-                logger.error(f"No match found for {title}, skipping...")
-                missing_tracks.append(track)
-                continue
+                # Attempt Normalizing title and search again
+                logger.warning("No match on first pass, attempting to normalize title...")
+                normalized_title = normalize_characters(title)
+                search_result = g.section.searchTracks(title=normalized_title)
+                if not search_result:
+                    logger.error(f"No match found for {title} after normalize, skipping...")
+                    missing_tracks.append(track)
+                    continue
+                else:
+                    logger.info(f"Found {search_result[0].title} - {search_result[0].artist().title} after Normalizing")
+                    count += 1
+                    plex_tracks.append(search_result[0])
+            elif len(search_result) > 1:
+                logger.warning(f"Found {len(search_result)} results for {title}, checking for exact match...")
+                for result in search_result:
+                    # Check to see if the result has a GUID
+                    if not result.guids:
+                        continue  # This means the result in Plex does not have a match
+                    # Compare the guid of the result to the list of MBIDs
+                    if result.guids[0].id in mbids:
+                        logger.info(f"Found {result.title} - {result.artist().title} with GUID Matching")
+                        count += 1
+                        guid_match = True
+                        plex_tracks.append(result)
+                        break
 
-            matched_track = match_track(search_result, mbids, album_artist)
+                if not guid_match:
+                    for result in search_result:
+                        if result.artist().title == album_artist:
+                            logger.info(f"Found {result.title} - {result.artist().title} with Artist Matching")
+                            count += 1
+                            plex_tracks.append(result)
+                            break
 
-            if matched_track:
-                plex_tracks.append(matched_track)
-                count += 1
-                logger.info(f"Successfully matched: {matched_track.title} - {matched_track.artist().title}")
+                        # If on the last result and no match was found, add to missing tracks
+                        if result == search_result[-1]:
+                            logger.error(f"No match found for {title}, skipping...")
+                            missing_tracks.append(track)
             else:
-                logger.error(f"No suitable match found for {title}, skipping...")
-                missing_tracks.append(track)
+                # Match was found on first try
+                logger.info(f"Found {search_result[0].title} - {search_result[0].artist().title} by Exact Match")
+                count += 1
+                plex_tracks.append(search_result[0])
 
         except plexapi.exceptions.NotFound:
-            logger.error(f"Track {title} not found in Plex.")
-            missing_tracks.append(track)
-        except Exception as e:
-            logger.error(f"An unexpected error occurred while processing {title}: {e}")
-            missing_tracks.append(track)
+            raise ValueError("Track not found.")
 
     logger.info(f"Found a total of {count} tracks")
-    logger.warning(f"Missing {len(missing_tracks)} tracks:")
+    logger.warning(f"Missing {len(missing_tracks)} tracks: ")
     for track in missing_tracks:
         logger.debug(track['title'])
 
-    # After processing all tracks, create the playlist
     create_playlist()
 
-
-def search_with_fallbacks(title, pseudo_titles):
-    """
-    Search for a track with normalization and pseudo-title fallbacks.
-    """
-    search_result = g.section.searchTracks(title=title)
-    if search_result:
-        return search_result
-
-    logger.warning(f"No match for {title}, attempting normalization...")
-    normalized_title = normalize_characters(title)
-    search_result = g.section.searchTracks(title=normalized_title)
-    if search_result:
-        return search_result
-
-    if pseudo_titles:
-        logger.warning(f"No match after normalization, attempting pseudo-titles...")
-        for pseudo_title in pseudo_titles:
-            print(pseudo_title)
-            search_result = g.section.searchTracks(title=pseudo_title)
-            if search_result:
-                return search_result
-
-    return None
-
-
-def match_track(search_result, mbids, album_artist):
-    """
-    Find the best match from search results based on GUIDs and artist matching.
-    """
-
-    logger.warning("Multiple results found, attempting to match with GUID...")
-    for result in search_result:
-        if result.guids and result.guids[0].id in mbids:
-            logger.info(f"Match found via GUID: {result.title} - {result.artist().title}")
-            return result
-
-    logger.warning(f"No GUID match found, attempting to match with artist name...")
-    for result in search_result:
-        if result.artist().title == album_artist:
-            logger.info(f"Match found via artist name: {result.title} - {result.artist().title}")
-            return result
-
-    return None
 
 def create_playlist():
     """

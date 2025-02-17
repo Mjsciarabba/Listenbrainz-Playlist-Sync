@@ -1,44 +1,59 @@
+import re
 import requests
+
 
 from modules.plex_functions import *
 import modules.global_variables as g
 from modules.musicbrainz_functions import *
 from modules.logger_utils import logger, get_tqdm_bar
+from modules.misc_utils import *
 
 with open("config.yml", 'r') as ymlfile:
     cfg = yaml.safe_load(ymlfile)
 
-# List to store the tracks found from playlist search
 track_list = []
 
-daily_bool = cfg['create_daily']
-weekly_bool = cfg['create_weekly']
-
-patch_list = []
-
-if daily_bool:
-        patch_list.append('daily-jams')
-if weekly_bool:
-        patch_list.append('weekly-jams')
-
-patch_set = set(patch_list)
-
-# Convert patch_list to a normalized set for consistency
-normalized_patch_set = {patch.strip().lower() for patch in patch_list}
-
-# List to store the first match for each patch
-first_matches = []
-# Set to store matched patches
-matched_patches = set()
-
-def get_playlists(user_token):
+def get_weeklyjams_playlist(user_token):
     """
-    Goes through all the 'Created For' playlists and returns the designated playlist for the current week
+    Goes through all the 'Created For' playlists and returns the 'Weekly Jams' playlist for the current week
     :param user_token: The ListenBrainz token for the user
-    :return: The specified playlist's info
+    :return: The 'Weekly Jams' playlist info
     """
     username = cfg['playlist_username']
 
+    search_title = get_playlist_title(username)
+
+    try:
+        get_playlist(username,user_token,search_title)
+    except Exception as e:
+        logger.error(f"Unable to create Weekly Exploration playlist")
+
+
+def get_weeklyexploration_playlist(user_token):
+    """
+    Goes through all the 'Created For' playlists and returns the 'Weekly Exploration' playlist for the current week
+    :param user_token: The ListenBrainz token for the user
+    :return: The 'Weekly Exploration' playlist info
+    """
+    username = cfg['playlist_username']
+
+    search_title = get_playlist_exploration_title(username)
+
+    try:
+        get_playlist(username,user_token,search_title)
+    except Exception as e:
+        logger.error(f"Unable to create Weekly Exploration playlist")
+
+
+
+def get_playlist(username, user_token, search_title):
+    """
+    Goes through all the 'Created For' playlists and returns the 'Weekly Exploration' playlist for the current week
+    :param username: The ListenBrainz username for the user
+    :param user_token: The ListenBrainz token for the user
+    :param search_title: Search string for the playlist title
+    :return: The 'Weekly Exploration' playlist info
+    """
     try:
         logger.info("Getting playlists...")
 
@@ -64,23 +79,24 @@ def get_playlists(user_token):
 
             # Find the playlist that is titled search_title
             for playlist in playlists:
-                # Extract and normalize the source_patch
-                source_patch = \
-                playlist['playlist']['extension']['https://musicbrainz.org/doc/jspf#playlist']['additional_metadata'][
-                    'algorithm_metadata']['source_patch']
-                normalized_source_patch = source_patch.strip().lower()
-
-                # Check if the source_patch is in the normalized set
-                if normalized_source_patch in normalized_patch_set and normalized_source_patch not in first_matches and normalized_source_patch not in matched_patches:
+                if search_title in playlist['playlist']['title']:
                     playlist_mbid = playlist['playlist']['identifier'].split('/')[-1]
-                    first_matches.append(playlist_mbid)
 
-                    # Mark this patch as matched
-                    matched_patches.add(normalized_source_patch)
+                    # Get the name of the second playlist
+                    g.playlist_name = playlist['playlist']['title']
+                    g.playlist_name = ' '.join(g.playlist_name.split(' ')[:2])
 
-                # Stop early if all patches have matches
-                if len(first_matches) == len(normalized_patch_set):
+                    # Get the summary of the second playlist
+                    g.playlist_summary = playlist['playlist']['annotation']
+                    # Remove the HTML tags from the summary
+                    g.playlist_summary = re.sub('<[^<]+?>', '', g.playlist_summary)
+                    # Remove the newlines and extra spaces from the summary
+                    g.playlist_summary = ' '.join(g.playlist_summary.split())
+
+                    get_tracks_from_playlist(user_token, playlist_mbid)
                     break
+            else:
+                raise ValueError(f'No playlist found with title "{search_title}"')
 
         else:
             raise ValueError(f"Error getting playlists: {response.status_code} - {response.text}")
@@ -88,11 +104,6 @@ def get_playlists(user_token):
     except Exception as e:
         logger.error(f"An error occurred: {e}")
         exit()
-
-    for mbid in first_matches:
-        track_list.clear()
-        get_tracks_from_playlist(user_token, mbid)
-
 
 def get_tracks_from_playlist(user_token, playlist_mbid):
     """
@@ -121,58 +132,23 @@ def get_tracks_from_playlist(user_token, playlist_mbid):
 
             logger.info("API call successful, parsing response...")
 
-            # Get the name of the playlist
-            g.playlist_name = playlist_data['playlist']['title']
-            g.playlist_name = ' '.join(g.playlist_name.split(' ')[:2])
-
-            # Get the summary of the playlist
-            g.playlist_summary = playlist_data['playlist']['annotation']
-            # Remove the HTML tags from the summary
-            g.playlist_summary = re.sub('<[^<]+?>', '', g.playlist_summary)
-            # Remove the newlines and extra spaces from the summary
-            g.playlist_summary = ' '.join(g.playlist_summary.split())
-
-            logger.info(f'Loading track info for {g.playlist_name}')
-
             playlist_tracks = playlist_data['playlist']['track']
 
             # Iterate through tracks and access information
             for track_data in get_tqdm_bar(playlist_tracks):
-                try:
-                    track_title = track_data['title']
-                    track_artist = track_data['creator']
-
-                    # Safeguard against missing or empty artists
-                    artists = track_data['extension']['https://musicbrainz.org/doc/jspf#track']['additional_metadata'].get(
-                        'artists', [])
-                    album_artist = artists[0].get('artist_credit_name', 'Unknown') if artists else 'Unknown'
-
-                    # Safeguard against missing identifier
-                    track_identifier = track_data.get('identifier', [])
-                    if not track_identifier:
-                        logger.warning(f"No identifier for track: {track_data}")
-                        continue
-                    identifier = str(track_identifier[0])
-
-                    # Process the identifier
-                    mbid = identifier.split('/')[-1]
-                    track_mbids, pseudo_titles = get_track_mbids(mbid, track_title)
-
-                    track_info = {
-                        'title': track_title,
-                        'artist': track_artist,
-                        'album_artist': album_artist,
-                        'mbids': track_mbids,
-                        'pseudo_titles': pseudo_titles
-                    }
-                    # logger.info("Found info for track: " + track_title)
-                    track_list.append(track_info)
-
-
-                except Exception as e:
-                    logger.error(f"Error processing track: {track_data['title']} - {e}")
-                    # Skip problematic track but continue processing others
-                    continue
+                track_title = track_data['title']
+                track_artist = track_data['creator']
+                album_artist = track_data['extension']['https://musicbrainz.org/doc/jspf#track']['additional_metadata']['artists'][0]['artist_credit_name']
+                identifier = str(track_data['identifier'][0])
+                track_mbids = get_track_mbids(identifier.split('/')[-1])
+                track_info = {
+                    'title': track_title,
+                    'artist': track_artist,
+                    'album_artist': album_artist,
+                    'mbids': track_mbids
+                }
+                # logger.info("Found info for track: " + track_title)
+                track_list.append(track_info)
 
         else:
             logger.error(f"Error getting tracks: {response.status_code} - {response.text}")
@@ -185,7 +161,3 @@ def get_tracks_from_playlist(user_token, playlist_mbid):
     logger.info("Parsing complete, searching for tracks...")
 
     search_for_track(track_list)
-
-
-
-
