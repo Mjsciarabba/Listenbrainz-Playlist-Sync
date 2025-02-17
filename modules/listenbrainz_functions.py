@@ -13,6 +13,22 @@ with open("config.yml", 'r') as ymlfile:
 
 track_list = []
 
+def get_dailyjams_playlist(user_token):
+    """
+    Goes through all the 'Created For' playlists and returns the 'Weekly Jams' playlist for the current week
+    :param user_token: The ListenBrainz token for the user
+    :return: The 'Weekly Jams' playlist info
+    """
+    username = cfg['playlist_username']
+
+    search_title = get_playlist_daily_title(username)
+    logger.info(search_title)
+
+    try:
+        get_playlist(username,user_token,search_title)
+    except Exception as e:
+        logger.error(f"Unable to create Weekly Exploration playlist")
+
 def get_weeklyjams_playlist(user_token):
     """
     Goes through all the 'Created For' playlists and returns the 'Weekly Jams' playlist for the current week
@@ -22,6 +38,7 @@ def get_weeklyjams_playlist(user_token):
     username = cfg['playlist_username']
 
     search_title = get_playlist_title(username)
+    logger.info(search_title)
 
     try:
         get_playlist(username,user_token,search_title)
@@ -38,6 +55,7 @@ def get_weeklyexploration_playlist(user_token):
     username = cfg['playlist_username']
 
     search_title = get_playlist_exploration_title(username)
+    logger.info("---------------------------"+search_title)
 
     try:
         get_playlist(username,user_token,search_title)
