@@ -108,8 +108,8 @@ def search_for_track(track_list: list[dict]):
 
     logger.info(f"Found a total of {count} tracks")
     logger.warning(f"Missing {len(missing_tracks)} tracks: ")
-    for track in missing_tracks:
-        logger.debug(track['title'])
+    #for track in missing_tracks:
+        #logger.debug(track['title'])
 
     create_playlist()
 
