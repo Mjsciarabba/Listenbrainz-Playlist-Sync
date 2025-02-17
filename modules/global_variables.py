@@ -6,6 +6,7 @@ mbid: str
 
 playlist_name: str
 playlist_summary: str
+playlist_prefix: str
 
 
 
