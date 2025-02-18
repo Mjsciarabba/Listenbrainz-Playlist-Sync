@@ -148,7 +148,6 @@ def create_playlist():
 
         playlist = g.section.playlist(playlistname)
         #playlist = g.section.playlist(playlist_prefix+g.playlist_name+"_"+today)
-        logger.error(playlist)
         logger.warning("Playlist already exists, checking for new tracks...")
 
         if playlist.items() == plex_tracks:
