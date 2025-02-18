@@ -4,6 +4,9 @@ from modules.plex_functions import set_section
 from datetime import date
 import calendar
 
+from modules.logger_utils import logger
+
+
 with open("config.yml", 'r') as ymlfile:
     cfg = yaml.safe_load(ymlfile)
 
