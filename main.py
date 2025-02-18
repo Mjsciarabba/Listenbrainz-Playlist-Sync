@@ -10,7 +10,7 @@ with open("config.yml", 'r') as ymlfile:
 if __name__ == "__main__":
     my_date = date.today()
     today = calendar.day_name[my_date.weekday()]
-    print(today)
+    logger.info("today is "+today)
 
     set_section()
     get_dailyjams_playlist(cfg['user_token'])

@@ -25,9 +25,7 @@ from datetime import date
 import calendar
 my_date = date.today()
 today = calendar.day_name[my_date.weekday()]
-print(today)
-
-
+#print(today)
 
 def set_section():
     """
