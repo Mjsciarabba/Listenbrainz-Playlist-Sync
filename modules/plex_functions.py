@@ -21,6 +21,11 @@ missing_tracks = []  # Any tracks that aren't found in Plex
 
 playlist_prefix = cfg['playlist_prefix']
 
+from datetime import date
+import calendar
+my_date = date.today()
+today = calendar.day_name[my_date.weekday()]
+#print(today)
 
 def set_section():
     """
@@ -123,9 +128,24 @@ def create_playlist():
     filter_tracks()
 
     logger.info("Checking playlist status...")
+    logger.warning(g.playlist_name)
+    if g.playlist_name == "Daily Jams":
+      playlistname = playlist_prefix+g.playlist_name+" for "+today
+    else:
+      playlistname = playlist_prefix+g.playlist_name
+    logger.warning(playlistname) 
+    logger.error("==============================================================================================") 
+
+    #exit()
+    #playlist = g.section.createPlaylist(title=playlist_prefix+g.playlist_name, items=plex_tracks)
+
+
     try:
         # Check if the playlist already exists
-        playlist = g.section.playlist(playlist_prefix+g.playlist_name)
+#        playlist = g.section.playlist(playlist_prefix+g.playlist_name+"_"+today)
+
+        playlist = g.section.playlist(playlistname)
+        #playlist = g.section.playlist(playlist_prefix+g.playlist_name+"_"+today)
         logger.warning("Playlist already exists, checking for new tracks...")
 
         if playlist.items() == plex_tracks:
@@ -145,7 +165,8 @@ def create_playlist():
     except plexapi.exceptions.NotFound:
         try:
             logger.info("Playlist not found, creating...")
-            playlist = g.section.createPlaylist(title=playlist_prefix+g.playlist_name, items=plex_tracks)
+            playlist = g.section.createPlaylist(title=playlistname, items=plex_tracks)
+            #playlist = g.section.createPlaylist(title=playlist_prefix+g.playlist_name, items=plex_tracks)
             if poster_path != 'YOUR_FILE_PATH':
                 playlist.uploadPoster(filepath=poster_path)
             playlist.edit(summary=g.playlist_summary)
