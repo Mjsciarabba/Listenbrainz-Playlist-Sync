@@ -1,3 +1,5 @@
+import time
+
 import yaml
 import plexapi.exceptions
 
@@ -113,8 +115,8 @@ def search_for_track(track_list: list[dict]):
 
     logger.info(f"Found a total of {count} tracks")
     logger.warning(f"Missing {len(missing_tracks)} tracks: ")
-    #for track in missing_tracks:
-        #logger.debug(track['title'])
+    for track in missing_tracks:
+        logger.warning(track['title'])
 
     create_playlist()
 
@@ -128,12 +130,10 @@ def create_playlist():
     filter_tracks()
 
     logger.info("Checking playlist status...")
-    logger.warning(g.playlist_name)
     if g.playlist_name == "Daily Jams":
-      playlistname = playlist_prefix+g.playlist_name+" for "+today
+        playlistname = playlist_prefix+g.playlist_name+" for "+today
     else:
-      playlistname = playlist_prefix+g.playlist_name
-    logger.warning(playlistname) 
+        playlistname = playlist_prefix+g.playlist_name
     logger.error("==============================================================================================") 
 
     #exit()
@@ -142,7 +142,7 @@ def create_playlist():
 
     try:
         # Check if the playlist already exists
-#        playlist = g.section.playlist(playlist_prefix+g.playlist_name+"_"+today)
+        # playlist = g.section.playlist(playlist_prefix+g.playlist_name+"_"+today)
 
         playlist = g.section.playlist(playlistname)
         #playlist = g.section.playlist(playlist_prefix+g.playlist_name+"_"+today)
@@ -169,7 +169,7 @@ def create_playlist():
             #playlist = g.section.createPlaylist(title=playlist_prefix+g.playlist_name, items=plex_tracks)
             if poster_path != 'YOUR_FILE_PATH':
                 playlist.uploadPoster(filepath=poster_path)
-            playlist.edit(summary=g.playlist_summary)
+            playlist.editSummary(summary=g.playlist_summary)
             logger.info("Playlist created")
         except Exception as e:
             # Handle specific exception for playlist creation failure
@@ -187,13 +187,12 @@ def filter_tracks():
     """
     filter_genre = cfg['filter_genre']
     if filter_genre != 'YOUR_GENRE':
-        for item in plex_tracks:
+        for item in plex_tracks[:]:  # Iterate over a copy
             track_album = item.album()
             genres = track_album.genres
             for album_genre in genres:
                 if album_genre.tag == filter_genre:
                     logger.info(f'Track "{item.title}" removed due to genre filter.')
-                    plex_tracks.remove(item)
-                    continue
-
+                    plex_tracks.remove(item)  # Safe removal
+                    break  # Exit inner loop once removed
 

@@ -20,8 +20,8 @@ def create_logger():
     handler.setFormatter(formatter)
 
     # Set the level for the root logger
-    #logging.root.setLevel(logging.NOTSET)
-    #logging.root.setLevel(logging.INFO)
+    # logging.root.setLevel(logging.NOTSET)
+    logging.root.setLevel(logging.INFO)
 
     # Add the colorlog handler to the root logger
     logging.root.addHandler(handler)
