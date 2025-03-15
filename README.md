@@ -27,6 +27,8 @@ auto-generated one from Plex. This upload only happens during initial creation o
 
 `filter_genre` is also optional. This field is used to filter out unwanted tracks by genre. A use case could be removing pesky Christmas songs infiltrating your playlist in the off-season.
 
+`playlist_prefix` is optional. Playlists are "Weekly Jams" and "Daily Jams". If you want to put something in front to make them "A_Weekly Jams" or whatever, put it here. Leave it blank (two quotes '' ) to not use a prefix.
+
 A completed Plex section looks like this:
 
 ```
@@ -36,6 +38,7 @@ token: 'abcdef123456789'
 music_section: 'Music' 
 poster_file_path: 'path\to\poster.png'
 filter_genre: 'Christmas'
+playlist_prefix: ''
 ```
 
 #### ListenBrainz

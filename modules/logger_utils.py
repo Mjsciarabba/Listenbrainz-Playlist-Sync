@@ -20,7 +20,8 @@ def create_logger():
     handler.setFormatter(formatter)
 
     # Set the level for the root logger
-    logging.root.setLevel(logging.NOTSET)
+    #logging.root.setLevel(logging.NOTSET)
+    #logging.root.setLevel(logging.INFO)
 
     # Add the colorlog handler to the root logger
     logging.root.addHandler(handler)
@@ -36,4 +37,4 @@ logger = create_logger()
 
 def get_tqdm_bar(iterable, desc="Processing", unit="item"):
     return tqdm(iterable, desc="\x1b[32m{}:".format(desc), unit=unit,
-                bar_format="\x1b[32m{desc} {percentage:3.0f}%|\x1b[32m{bar}| {n}/{total} tracks processed \x1b[0m")
+                bar_format="\x1b[32m{desc} {percentage:3.0f}%|\x1b[32m{bar}| {n}/{total} tracks found \x1b[0m")
