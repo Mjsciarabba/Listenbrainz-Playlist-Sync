@@ -131,7 +131,7 @@ def create_playlist():
 
     logger.info("Checking playlist status...")
     if g.playlist_name == "Daily Jams":
-        playlistname = playlist_prefix+g.playlist_name+" for "+today
+        playlistname = playlist_prefix+g.playlist_name
     else:
         playlistname = playlist_prefix+g.playlist_name
     logger.error("==============================================================================================") 

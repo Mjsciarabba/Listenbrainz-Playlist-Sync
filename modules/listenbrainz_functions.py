@@ -142,7 +142,7 @@ def get_tracks_from_playlist(user_token, playlist_mbid):
             'Content-Type': 'application/json',
         }
 
-        # Make a GET request to the ListenBrainz API to retrieve recommendations
+        # Make a GET request to the ListenBrainz API to retrieve playlist data
         response = requests.get(f'https://api.listenbrainz.org/1/playlist/{playlist_mbid}',
                                 headers=headers)
 
@@ -150,26 +150,48 @@ def get_tracks_from_playlist(user_token, playlist_mbid):
         if response.status_code == 200:
             # Parse the JSON response
             playlist_data = response.json()
-
             logger.info("API call successful, parsing response...")
 
-            playlist_tracks = playlist_data['playlist']['track']
+            playlist_tracks = playlist_data.get('playlist', {}).get('track', [])
+            if not playlist_tracks:
+                logger.warning("No tracks found in the playlist.")
+                return
 
             # Iterate through tracks and access information
             for track_data in get_tqdm_bar(playlist_tracks):
-                track_title = track_data['title']
-                track_artist = track_data['creator']
-                album_artist = track_data['extension']['https://musicbrainz.org/doc/jspf#track']['additional_metadata']['artists'][0]['artist_credit_name']
-                identifier = str(track_data['identifier'][0])
-                track_mbids = get_track_mbids(identifier.split('/')[-1])
-                track_info = {
-                    'title': track_title,
-                    'artist': track_artist,
-                    'album_artist': album_artist,
-                    'mbids': track_mbids
-                }
-                # logger.info("Found info for track: " + track_title)
-                track_list.append(track_info)
+                try:
+                    track_title = track_data.get('title', 'Unknown Title')
+                    track_artist = track_data.get('creator', 'Unknown Artist')
+
+                    # Navigate nested structure safely
+                    artist_info = (
+                        track_data.get('extension', {})
+                        .get('https://musicbrainz.org/doc/jspf#track', {})
+                        .get('additional_metadata', {})
+                        .get('artists', [])
+                    )
+
+                    album_artist = artist_info[0].get('artist_credit_name') if artist_info else 'Unknown Album Artist'
+
+                    identifier_list = track_data.get('identifier', [])
+                    if not identifier_list:
+                        logger.warning(f"Missing identifier for track: {track_title}")
+                        continue
+
+                    identifier = str(identifier_list[0])
+                    track_mbids = get_track_mbids(identifier.split('/')[-1])
+
+                    track_info = {
+                        'title': track_title,
+                        'artist': track_artist,
+                        'album_artist': album_artist,
+                        'mbids': track_mbids
+                    }
+
+                    track_list.append(track_info)
+
+                except Exception as track_error:
+                    logger.warning(f"Skipping track due to error: {track_error}")
 
         else:
             logger.error(f"Error getting tracks: {response.status_code} - {response.text}")
@@ -180,5 +202,5 @@ def get_tracks_from_playlist(user_token, playlist_mbid):
         exit()
 
     logger.info("Parsing complete, searching for tracks...")
-
     search_for_track(track_list)
+
