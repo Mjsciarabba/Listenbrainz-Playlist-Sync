@@ -13,3 +13,15 @@ api_email: 'YOUR_EMAIL' # Replace with the email you want to use for the Musicbr
 create_daily: False # Set to true if you want this ListenBrainz playlist to be synced
 create_weekly: True # Set to true if you want this ListenBrainz playlist to be synced
 
+# This is a list of words that will be removed from titles when seraching
+filter_words: [
+    "original mix",
+    "radio edit",
+    "single edit",
+    "alternate mix",
+    "remastered",
+    "remaster",
+    "single version",
+    "retail mix",
+    "quartet"
+]

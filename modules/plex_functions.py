@@ -45,6 +45,23 @@ def set_section():
         raise ValueError("Section not found.")
 
 
+def filter_words_from_title(input_title):
+    """
+    Filters out tracks with certain words in the title before searching for them in Plex.
+    :return:
+    """
+    title = input_title
+    filter_words = cfg['filter_words']
+    for word in filter_words:
+        if word in input_title:
+            # Remove word from title and update track title
+            title = input_title.replace(word, '')
+            # Remove empty parentheses from title and update track title
+            title = title.replace('()', '')
+
+    return title
+
+
 # Search through the Plex library for the track matching the name
 def search_for_track(track_list: list[dict]):
     """
@@ -69,7 +86,8 @@ def search_for_track(track_list: list[dict]):
                 # Attempt Normalizing title and search again
                 logger.warning("No match on first pass, attempting to normalize title...")
                 normalized_title = normalize_characters(title)
-                search_result = g.section.searchTracks(title=normalized_title)
+                filtered_title = filter_words_from_title(normalized_title)
+                search_result = g.section.searchTracks(title=filtered_title)
                 if not search_result:
                     logger.error(f"No match found for {title} after normalize, skipping...")
                     missing_tracks.append(track)
