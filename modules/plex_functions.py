@@ -14,9 +14,12 @@ with open("config.yml", 'r') as ymlfile:
     cfg = yaml.safe_load(ymlfile)
 
 
+if cfg['baseurl'] == "" or cfg['token'] == "":
+    raise ValueError("Plex base URL and token cannot be blank.")
+
 plex = PlexServer(cfg['baseurl'], cfg['token'])
 
-poster_path = cfg['poster_file_path']
+poster_path = cfg.get('poster_file_path','YOUR_FILE_PATH')
 
 plex_tracks = []  # Found tracks to be added to Plex
 missing_tracks = []  # Any tracks that aren't found in Plex
@@ -51,7 +54,7 @@ def filter_words_from_title(input_title):
     :return:
     """
     title = input_title
-    filter_words = cfg['filter_words']
+    filter_words = cfg.get('filter_words',[])
     for word in filter_words:
         if word in input_title:
             # Remove word from title and update track title
@@ -203,7 +206,7 @@ def filter_tracks():
     Filters out tracks by genre before creating/modifying the playlist.
     :return:
     """
-    filter_genre = cfg['filter_genre']
+    filter_genre = cfg.get('filter_genre','YOUR_GENRE')
     if filter_genre != 'YOUR_GENRE':
         for item in plex_tracks[:]:  # Iterate over a copy
             track_album = item.album()

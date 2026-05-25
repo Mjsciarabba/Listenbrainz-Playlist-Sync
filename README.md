@@ -51,6 +51,8 @@ can use any email address
 
 `create_daily` and `create_weekly` allow you to set whether that playlist type will sync from ListenBrainz. By default, only `create_weekly` is set to `True`
 
+`filter_words` is optional. This field is used to remove unnecessary words from track titles to help with matching tracks. There are some included values by default, however this list can be modified as needed
+
 A completed ListenBrainz section looks like this:
 ```
 # ListenBrainz Info
@@ -59,6 +61,18 @@ playlist_username: 'listenbrainz'
 api_email: 'mail@example.com'
 create_daily: False
 create_weekly: True
+
+filter_words: [
+    "original mix",
+    "radio edit",
+    "single edit",
+    "alternate mix",
+    "remastered",
+    "remaster",
+    "single version",
+    "retail mix",
+    "quartet"
+]
 ```
 
 ### Step 4 - Install Requirements

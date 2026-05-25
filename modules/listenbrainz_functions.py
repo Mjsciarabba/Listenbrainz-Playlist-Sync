@@ -19,6 +19,9 @@ def get_dailyjams_playlist(user_token):
     :param user_token: The ListenBrainz token for the user
     :return: The 'Weekly Jams' playlist info
     """
+    if cfg['playlist_username'] == "":
+        # Throw an error
+        raise ValueError("Playlist username cannot be blank.")
     username = cfg['playlist_username']
 
     search_title = get_playlist_daily_title(username)
@@ -36,6 +39,9 @@ def get_weeklyjams_playlist(user_token):
     :param user_token: The ListenBrainz token for the user
     :return: The 'Weekly Jams' playlist info
     """
+    if cfg['playlist_username'] == "":
+        # Throw an error
+        raise ValueError("Playlist username cannot be blank.")
     username = cfg['playlist_username']
 
     search_title = get_playlist_title(username)
@@ -54,6 +60,9 @@ def get_weeklyexploration_playlist(user_token):
     :param user_token: The ListenBrainz token for the user
     :return: The 'Weekly Exploration' playlist info
     """
+    if cfg['playlist_username'] == "":
+        # Throw an error
+        raise ValueError("Playlist username cannot be blank.")
     username = cfg['playlist_username']
 
     search_title = get_playlist_exploration_title(username)

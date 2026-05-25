@@ -7,6 +7,9 @@ from modules.logger_utils import logger
 with open("config.yml", 'r') as ymlfile:
     cfg = yaml.safe_load(ymlfile)
 
+if cfg['api_email'] == "":
+    # Throw an error
+    raise ValueError("API email cannot be blank.")
 email = cfg['api_email']
 
 # Set your MusicBrainz API key
