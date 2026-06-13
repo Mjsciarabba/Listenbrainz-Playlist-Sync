@@ -5,7 +5,7 @@ import requests
 from modules.plex_functions import *
 import modules.global_variables as g
 from modules.musicbrainz_functions import *
-from modules.logger_utils import logger, get_tqdm_bar
+from modules.logger_utils import logger
 from modules.misc_utils import *
 
 with open("config.yml", 'r') as ymlfile:
@@ -167,7 +167,8 @@ def get_tracks_from_playlist(user_token, playlist_mbid):
                 return
 
             # Iterate through tracks and access information
-            for track_data in get_tqdm_bar(playlist_tracks):
+            for i, track_data in enumerate(playlist_tracks, 1):
+                logger.info(f"Processing track {i}/{len(playlist_tracks)}...")
                 try:
                     track_title = track_data.get('title', 'Unknown Title')
                     track_artist = track_data.get('creator', 'Unknown Artist')
