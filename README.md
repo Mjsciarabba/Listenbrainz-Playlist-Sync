@@ -16,6 +16,8 @@ https://github.com/Mjsciarabba/Listenbrainz-Playlist-Sync/releases
 ### Step 3 - Configuration
 In the project directory rename `config.yml.example` to `config.yml`, open `config.yml` with your text editor and edit where needed.
 
+If running via Docker, place your `config.yml` in the folder you map to `/config` inside the container rather than the project directory.
+
 #### Plex
 The method for obtaining a Plex token is described here: https://support.plex.tv/articles/204059436-finding-an-authentication-token-x-plex-token/
 
@@ -86,9 +88,21 @@ Now that configuration is finished and requirements have been installed, we can 
 
 `python main.py`
 
-### Optional - Schedule Task
-Using the Windows Task Scheduler, you can have this script run on a weekly basis automatically. Here's how to set it up:
+### Optional - Docker
+A Dockerfile is included for running the script in a container. Build the image from the project directory:
 
+`docker build -t listenbrainz-playlist-sync .`
+
+Then run it with your config folder mounted:
+
+`docker run -v /path/to/your/config:/config listenbrainz-playlist-sync`
+
+For Unraid, set the container path to `/config` and point it at your appdata folder, then place your `config.yml` there.
+
+### Optional - Schedule Task
+You can have this script run on a regular basis automatically. Here's how to set it up
+
+#### Windows Task Scheduler
 1. Create a `Runner.cmd` file by opening the text editor (i.e. Notepad, TextEdit) and pasting the following code:
 ```
 cd C:\Users\USERNAMEHERE\Listenbrainz Playlist Sync
@@ -98,13 +112,29 @@ python main.py
 ** Ensure that Task Scheduler is opened and not Task Manager **
 3. Select "Create a basic task" on the right-hand column
 4. Give the task a name, such as `Listenbrainz Sync` and then select "Next"
-5. Choose the frequency that this should run, `Weekly` is suggested.
+5. Choose the frequency that this should run.
 6. Choose the action "Start a program" and select "Next".
 7. Click "Browse", Navigate to the directory and choose `Runner.cmd`, which was created in Step 1, then select "Open".
 8. Copy the directory everything up to but not including `Runner.cmd` from the "Program/Script" field, and paste it into the "Start in" field.
 9. Click "Finish".
 10. Click "Task Schedule Library" on the left. The "Listenbrainz Sync" task should be visible.
 
+#### User Scripts (Unraid)
+1. Install the User Scripts plugin from the Unraid Community Applications store if you haven't already
+2. Navigate to Settings > User Scripts and click "Add New Script"
+3. Give the script a name such as `Listenbrainz Sync` and click "OK"
+4. Click the gear icon next to the script and select "Edit Script"
+5. Paste the following code:
+
+\```
+#!/bin/bash
+docker start listenbrainz
+\```
+
+6. Click "Save Changes"
+7. Click the schedule dropdown next to the script and select "Custom"
+8. Enter a cron schedule (for example `0 9 * * 1` to run every Monday at 9am)
+9. Click "Apply"
 
 ## Requirements
 
