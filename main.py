@@ -1,14 +1,11 @@
-import yaml
 from modules.listenbrainz_functions import get_weeklyjams_playlist,get_weeklyexploration_playlist,get_dailyjams_playlist
 from modules.plex_functions import set_section
 from datetime import date
 import calendar
+from modules.global_variables import cfg
 
 from modules.logger_utils import logger
 
-
-with open("config.yml", 'r') as ymlfile:
-    cfg = yaml.safe_load(ymlfile)
 
 if __name__ == "__main__":
     my_date = date.today()

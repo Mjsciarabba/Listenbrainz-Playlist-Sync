@@ -1,11 +1,8 @@
 import musicbrainzngs
 import logging
-import yaml
 
 from modules.logger_utils import logger
-
-with open("config.yml", 'r') as ymlfile:
-    cfg = yaml.safe_load(ymlfile)
+from modules.global_variables import cfg
 
 if cfg['api_email'] == "":
     # Throw an error

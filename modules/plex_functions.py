@@ -1,6 +1,3 @@
-import time
-
-import yaml
 import plexapi.exceptions
 
 from plexapi.server import PlexServer
@@ -10,21 +7,17 @@ from modules.logger_utils import logger
 from modules.misc_utils import *
 
 
-with open("config.yml", 'r') as ymlfile:
-    cfg = yaml.safe_load(ymlfile)
-
-
-if cfg['baseurl'] == "" or cfg['token'] == "":
+if g.cfg['baseurl'] == "" or g.cfg['token'] == "":
     raise ValueError("Plex base URL and token cannot be blank.")
 
-plex = PlexServer(cfg['baseurl'], cfg['token'])
+plex = PlexServer(g.cfg['baseurl'], g.cfg['token'])
 
-poster_path = cfg.get('poster_file_path','YOUR_FILE_PATH')
+poster_path = g.cfg.get('poster_file_path','YOUR_FILE_PATH')
 
 plex_tracks = []  # Found tracks to be added to Plex
 missing_tracks = []  # Any tracks that aren't found in Plex
 
-playlist_prefix = cfg['playlist_prefix']
+playlist_prefix = g.cfg['playlist_prefix']
 
 from datetime import date
 import calendar
@@ -37,13 +30,13 @@ def set_section():
     Sets the Plex library section to search in
     """
     # Handle if the section name passed in is blank
-    if cfg['music_section'] == "":
+    if g.cfg['music_section'] == "":
         # Throw an error
         raise ValueError("Section name cannot be blank.")
 
     # Set the section
     try:
-        g.section = plex.library.section(cfg['music_section'])
+        g.section = plex.library.section(g.cfg['music_section'])
     except plexapi.exceptions.NotFound:
         raise ValueError("Section not found.")
 
@@ -54,7 +47,7 @@ def filter_words_from_title(input_title):
     :return:
     """
     title = input_title
-    filter_words = cfg.get('filter_words',[])
+    filter_words = g.cfg.get('filter_words',[])
     for word in filter_words:
         if word in input_title:
             # Remove word from title and update track title
@@ -206,7 +199,7 @@ def filter_tracks():
     Filters out tracks by genre before creating/modifying the playlist.
     :return:
     """
-    filter_genre = cfg.get('filter_genre','YOUR_GENRE')
+    filter_genre = g.cfg.get('filter_genre','YOUR_GENRE')
     if filter_genre != 'YOUR_GENRE':
         for item in plex_tracks[:]:  # Iterate over a copy
             track_album = item.album()
