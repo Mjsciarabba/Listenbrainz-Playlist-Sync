@@ -1,4 +1,7 @@
 import plexapi.exceptions
+import plexapi
+import uuid
+import os
 
 from plexapi.server import PlexServer
 
@@ -6,6 +9,27 @@ import modules.global_variables as g
 from modules.logger_utils import logger
 from modules.misc_utils import *
 
+# Persistent UUID for Plex device identification
+uuid_file = os.path.join(g.config_dir, "UUID")
+
+uuid_num = None
+if os.path.exists(uuid_file):
+    with open(uuid_file) as handle:
+        for line in handle.readlines():
+            line = line.strip()
+            if len(line) > 0:
+                uuid_num = line
+                break
+if not uuid_num:
+    uuid_num = uuid.uuid4()
+    try:
+        with open(uuid_file, "w") as handle:
+            handle.write(str(uuid_num))
+        logger.info(f"UUID file created: {uuid_file}")
+    except Exception as e:
+        logger.error(f"Failed to create UUID file: {e}")
+
+plexapi.BASE_HEADERS["X-Plex-Client-Identifier"] = str(uuid_num)
 
 if g.cfg['baseurl'] == "" or g.cfg['token'] == "":
     raise ValueError("Plex base URL and token cannot be blank.")
