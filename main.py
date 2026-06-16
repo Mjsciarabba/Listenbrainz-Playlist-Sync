@@ -15,6 +15,8 @@ if __name__ == "__main__":
     set_section()
     if cfg['create_daily']:
         get_dailyjams_playlist(cfg['user_token'])
+        poster_path = cfg.get('daily_poster', 'YOUR_FILE_PATH')
     if today == "Monday" and cfg['create_weekly']:
         get_weeklyjams_playlist(cfg['user_token'])
+        poster_path = cfg.get('weekly_poster', 'YOUR_FILE_PATH')
     #get_weeklyexploration_playlist(cfg['user_token'])

@@ -2,7 +2,6 @@
 baseurl: 'YOUR_PLEX_URL' # Replace 'YOUR_PLEX_URL' with the URL for your server
 token: 'YOUR_TOKEN' # Replace 'YOUR_USER_TOKEN' with your Plex token
 music_section: 'YOUR_SECTION_NAME' # Replace 'YOUR_SECTION_NAME' with the name of your music section
-poster_file_path: 'YOUR_FILE_PATH' # OPTIONAL, replace 'YOUR_FILE_PATH' with the filepath to a poster for the playlist
 filter_genre: 'YOUR_GENRE' # OPTIONAL, replace 'YOUR_GENRE' with the genre you want to filter by (case-sensitive, one only).
 playlist_prefix: 'A_' # playlists are "Weekly Jams" and "Daily Jams". If you want to put something in front to make them "A_Weekly Jams" or whatever, put it here. Leave it blank (two quotes '' ) to not use a prefix
 
@@ -12,6 +11,10 @@ playlist_username: 'YOUR_USERNAME' # Replace 'YOUR_USERNAME' with the username o
 api_email: 'YOUR_EMAIL' # Replace with the email you want to use for the Musicbrainz API
 create_daily: False # Set to true if you want this ListenBrainz playlist to be synced
 create_weekly: True # Set to true if you want this ListenBrainz playlist to be synced
+
+# Poster Info
+daily_poster: 'YOUR_FILE_PATH' # OPTIONAL, replace 'YOUR_FILE_PATH' with the filepath to a poster for the Daily playlist
+weekly_poster: 'YOUR_FILE_PATH' # OPTIONAL, replace 'YOUR_FILE_PATH' with the filepath to a poster for the Weekly playlist
 
 # This is a list of words that will be removed from titles when seraching
 filter_words: [

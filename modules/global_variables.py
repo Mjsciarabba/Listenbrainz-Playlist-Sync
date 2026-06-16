@@ -9,6 +9,8 @@ mbid: str
 playlist_name: str
 playlist_summary: str
 
+poster_path: str
+
 base_dir = os.path.dirname(os.path.abspath(__file__))
 root_dir = os.path.normpath(os.path.join(base_dir, ".."))
 config_path = os.environ.get("CONFIG_PATH") or os.path.join(root_dir, "config.yml")

@@ -36,8 +36,6 @@ if g.cfg['baseurl'] == "" or g.cfg['token'] == "":
 
 plex = PlexServer(g.cfg['baseurl'], g.cfg['token'])
 
-poster_path = g.cfg.get('poster_file_path','YOUR_FILE_PATH')
-
 plex_tracks = []  # Found tracks to be added to Plex
 missing_tracks = []  # Any tracks that aren't found in Plex
 
@@ -205,8 +203,8 @@ def create_playlist():
             logger.info("Playlist not found, creating...")
             playlist = g.section.createPlaylist(title=playlistname, items=plex_tracks)
             #playlist = g.section.createPlaylist(title=playlist_prefix+g.playlist_name, items=plex_tracks)
-            if poster_path != 'YOUR_FILE_PATH':
-                playlist.uploadPoster(filepath=poster_path)
+            if g.poster_path != 'YOUR_FILE_PATH':
+                playlist.uploadPoster(filepath=g.poster_path)
             playlist.editSummary(summary=g.playlist_summary)
             logger.info("Playlist created")
         except Exception as e:

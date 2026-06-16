@@ -22,10 +22,7 @@ If running via Docker, place your `config.yml` in the folder you map to `/config
 The method for obtaining a Plex token is described here: https://support.plex.tv/articles/204059436-finding-an-authentication-token-x-plex-token/
 
 In the config file, enter your Plex library/section name containing your music, like so:
-`music_section: 'Music'` 
-
-The `poster_file_path` field is optional. This is for if you want to upload a custom playlist cover instead of using the 
-auto-generated one from Plex. This upload only happens during initial creation of the playlist
+`music_section: 'Music'`
 
 `filter_genre` is also optional. This field is used to filter out unwanted tracks by genre. A use case could be removing pesky Christmas songs infiltrating your playlist in the off-season.
 
@@ -38,7 +35,6 @@ A completed Plex section looks like this:
 baseurl: '192.168.1.70:32400' 
 token: 'abcdef123456789' 
 music_section: 'Music' 
-poster_file_path: 'path\to\poster.png'
 filter_genre: 'Christmas'
 playlist_prefix: ''
 ```
@@ -77,6 +73,17 @@ filter_words: [
 ]
 ```
 
+#### Posters
+The posters field is optional. This is for if you want to upload a custom playlist cover instead of using the auto-generated one from Plex. This upload only happens during initial creation of the playlist. There are two options for posters currently, one for the 'Daily' and one for the 'Weekly' playlists. 
+
+There is a 'Daily' poster I created based on the ListenBrainz generated ones. To use it, download it and place it in your config directory, and then set `daily_poster` to the filename.
+
+A completed Posters section looks like this:
+```
+# Poster Info
+daily_poster: 'Daily Jams.png'
+weekly_poster: 'Weekly Jams.png'
+```
 ### Step 4 - Install Requirements
 
 Install the additional requirements using the Python package installer (pip) from within the project folder:
