@@ -78,6 +78,7 @@ def normalize_characters(title: str):
         '”': '"',
         '’': "'",
         '‐': '-',
+        '！': '!',
     }
 
     for key, value in char_mapping.items():
